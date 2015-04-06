@@ -53,8 +53,7 @@ module.exports.routes = {
     //    view: 'user/list'
     },
     /*CREATE >> this.model.save() in ember will invoke this API >> Create User*/
-    'post /api/v1/
-    ': {
+    'post /api/v1/employee': {
         controller: 'employee',
         action: "create",
         //    view: 'user/list'

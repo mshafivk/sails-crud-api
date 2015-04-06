@@ -23,10 +23,11 @@ module.exports = {
 
             if(err)
             {
-                console.log(err);
+              //  console.log(err);
                /* req.session.flash={err:err
                  };*/
-                return res.json({status:"ERROR",statusDescription:err});
+                return next(err);
+             //   return res.json({status:"ERROR",statusDescription:err});
             }
             return res.json({status:"OK",employee:_employee});
 
@@ -51,16 +52,17 @@ module.exports = {
     findAll:function(req,res,next){
         Employee.find(function(err,employees){
             if(err)
-                return res.json({status:"ERROR",statusDescription:err});
-            res.json({status:"OK",employees:employees});
+                return next({status:"ERROR",statusDescription:err});
+            res.json({employees:employees});
         });
     },
-    find:function(req,res){
+    find:function(req,res,next){
         Employee.findOne(req.param('id'),function userFound(err,employee){
-        if(err)return res.json({status:"ERROR","statusDescription":err});
+        if(err)return next({status:"ERROR","statusDescription":err});
         if(!employee)
-            return res.json({status:"ERROR","statusDescription":"404:Employee Not Found"});
-        res.json({status:"OK",employee:employee});
+            // return res.status(404).send({status:404, message: 'Employee Not Found', type:'internal'});
+            return next({status:"ERROR",statusDescription:'Employee Not Found'});
+        return res.json({employee:employee});
         });
     },
     index:function(req,res,next){
@@ -73,14 +75,14 @@ module.exports = {
     delete:function(req,res,next){
         Employee.findOne(req.param('id'),function userFound(err,employee){
         if(err)
-              return res.json({status:"ERROR","statusDescription":err});
+              return next({status:"ERROR","statusDescription":err});
         if(!employee)
-             return res.json({status:"ERROR","statusDescription":"404:Employee Not Found"});
+             return next({status:"ERROR","statusDescription":"404:Employee Not Found"});
             Employee.destroy(req.param('id'),function userDestroyed(err){
             if(err)
-                  return res.json({status:"ERROR","statusDescription":"404:Employee Not Found"});
+                  return next({status:"ERROR","statusDescription":"404:Employee Not Found"});
             });
-         res.json({status:"OK","statusDescription":"Employee Deleted Successfully"});
+         return next({status:"OK","statusDescription":"Employee Deleted Successfully"});
     });
     }
 
